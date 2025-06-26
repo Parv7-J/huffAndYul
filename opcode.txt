@@ -1,0 +1,272 @@
+[00]	PUSH1	80  [80]
+[02]	PUSH1	40  [40,80]
+[04]	MSTORE	    [] stores 80 at 40 in memory
+[05]	CALLVALUE	[val] gets msg.value in wei
+[06]	DUP1	    [val,val]
+[07]	ISZERO	    [val==0,val]
+[08]	PUSH1	0e  [0e,val==0,val]
+[0a]	JUMPI	    [val] jumps to 0e if val==0 else continues
+
+//if val was not zero(some wei was sent along the msg)
+[0b]	PUSH0	    [0,val]
+[0c]	PUSH0	    [0,0,val]
+[0d]	REVERT	    [val]
+
+//jumps here if val was zero(no wei was sent along)
+[0e]	JUMPDEST	[val]
+[0f]	POP	        []
+[10]	PUSH2	0129    [0129]
+[13]	DUP1	         [0129,0129]
+[14]	PUSH2	001c    [001c,0129,0129]
+[17]	PUSH0	         [0,001c,0129,0129]
+[18]	CODECOPY	     [0129] //0 is dest offset in memory, 001c is from where to start copying(28th byte), and 0129(297 bytes) is how many bytes to copy
+[19]	PUSH0	         [0,0129]
+[1a]	RETURN	         []  //returns 0129 bytes from 0 position(i.e. the code we just copied to this location)
+
+//the upper block of code puts the runtime code onto memory
+
+
+[1b]	INVALID	
+
+
+//runtime code(that runs on runtime of contract)
+[00]	PUSH1	80 [80]
+[02]	PUSH1	40  [40,80]
+[04]	MSTORE	    []
+[05]	CALLVALUE	[val]
+[06]	DUP1	    [val,val]
+[07]	ISZERO	    [val==0,val]
+[08]	PUSH1	0e  [0e,val==0,val]
+[0a]	JUMPI	    [val]
+
+[0b]	PUSH0	    [0,val]
+[0c]	PUSH0	    [0,0,val]
+[0d]	REVERT	    [val]
+
+[0e]	JUMPDEST	[val]
+[0f]	POP	        []
+[10]	PUSH1	04  [04]
+[12]	CALLDATASIZE    [inputsize,04]
+[13]	LT	            [inputsize<04]
+[14]	PUSH1	30      [30,inputsize<04]
+[16]	JUMPI	        []
+
+[17]	PUSH0	        [0]
+[18]	CALLDATALOAD	[calldata(32bytes from 0)]
+[19]	PUSH1	e0       [e0,calldata]
+[1b]	SHR	                [calldatarightshifted224bytes]
+[1c]	DUP1	            [selector,selector]
+[1d]	PUSH4	67d41eca    [67d41eca,selector,selector]
+[22]	EQ	                [67d41eca==selector,selector]
+[23]	PUSH1	34          [34,67d41eca==selector,selector]
+[25]	JUMPI	            [selector]
+
+[26]	DUP1	
+[27]	PUSH4	fe7e1be3
+[2c]	EQ	
+[2d]	PUSH1	4c
+[2f]	JUMPI	//makes a jump to 4c if selector is fe7e1be3 [selector]
+
+[30]	JUMPDEST	[]
+[31]	PUSH0	    [0]
+[32]	PUSH0	[0,0]
+[33]	REVERT	[]
+
+//if selector is 67d41eca
+[34]	JUMPDEST	    [selector]
+[35]	PUSH1	4a      [4a,selector]
+[37]	PUSH1	04      [04,4a,selector]
+[39]	DUP1	        [04,04,4a,selector]
+[3a]	CALLDATASIZE	[calldatasize,04,04,4a,selector]
+[3b]	SUB	            [calldatasize-04,04,4a,selector]
+[3c]	DUP2	        [04,calldatasize-04,04,4a,selector]
+[3d]	ADD	            [calldatasize,04,4a,selector]
+[3e]	SWAP1	        [04,calldatasize,4a,selector]
+[3f]	PUSH1	46      [46,04,calldatasize,4a,selector]
+[41]	SWAP2	        [calldatasize,04,46,4a,selector]
+[42]	SWAP1	        [04,calldatasize,46,4a,selector]
+[43]	PUSH1	a9      [a9,04,calldatasize,46,4a,selector]
+[45]	JUMP	        [04,calldatasize,46,4a,selector]
+
+[46]	JUMPDEST	
+[47]	PUSH1	66
+[49]	JUMP	
+[4a]	JUMPDEST	
+[4b]	STOP	
+
+//if selector is fe7e1be3
+[4c]	JUMPDEST	
+[4d]	PUSH1	52
+[4f]	PUSH1	6f
+[51]	JUMP	
+[52]	JUMPDEST	
+[53]	PUSH1	40
+[55]	MLOAD	
+[56]	PUSH1	5d
+[58]	SWAP2	
+[59]	SWAP1	
+[5a]	PUSH1	dc
+[5c]	JUMP	
+[5d]	JUMPDEST	
+[5e]	PUSH1	40
+[60]	MLOAD	
+[61]	DUP1	
+[62]	SWAP2	
+[63]	SUB	
+[64]	SWAP1	
+[65]	RETURN	
+[66]	JUMPDEST	
+[67]	DUP1	
+[68]	PUSH0	
+[69]	DUP2	
+[6a]	SWAP1	
+[6b]	SSTORE	
+[6c]	POP	
+[6d]	POP	
+[6e]	JUMP	
+[6f]	JUMPDEST	
+[70]	PUSH0	
+[71]	PUSH0	
+[72]	SLOAD	
+[73]	SWAP1	
+[74]	POP	
+[75]	SWAP1	
+[76]	JUMP	
+[77]	JUMPDEST	
+[78]	PUSH0	
+[79]	PUSH0	
+[7a]	REVERT	
+[7b]	JUMPDEST	
+[7c]	PUSH0	
+[7d]	DUP2	
+[7e]	SWAP1	
+[7f]	POP	
+[80]	SWAP2	
+[81]	SWAP1	
+[82]	POP	
+[83]	JUMP	
+[84]	JUMPDEST	
+[85]	PUSH1	8b
+[87]	DUP2	
+[88]	PUSH1	7b
+[8a]	JUMP	
+[8b]	JUMPDEST	
+[8c]	DUP2	
+[8d]	EQ	
+[8e]	PUSH1	94
+[90]	JUMPI	
+[91]	PUSH0	
+[92]	PUSH0	
+[93]	REVERT	
+[94]	JUMPDEST	
+[95]	POP	
+[96]	JUMP	
+[97]	JUMPDEST	
+[98]	PUSH0	
+[99]	DUP2	
+[9a]	CALLDATALOAD	
+[9b]	SWAP1	
+[9c]	POP	
+[9d]	PUSH1	a3
+[9f]	DUP2	
+[a0]	PUSH1	84
+[a2]	JUMP	
+[a3]	JUMPDEST	
+[a4]	SWAP3	
+[a5]	SWAP2	
+[a6]	POP	
+[a7]	POP	
+[a8]	JUMP
+
+
+//jumps here
+[a9]	JUMPDEST	[04,calldatasize,46,4a,selector]
+[aa]	PUSH0	    [0,04,calldatasize,46,4a,selector]
+[ab]	PUSH1	20
+[ad]	DUP3	
+[ae]	DUP5	
+[af]	SUB	
+[b0]	SLT	
+[b1]	ISZERO	
+[b2]	PUSH1	bb
+[b4]	JUMPI	
+[b5]	PUSH1	ba
+[b7]	PUSH1	77
+[b9]	JUMP	
+[ba]	JUMPDEST	
+[bb]	JUMPDEST	
+[bc]	PUSH0	
+[bd]	PUSH1	c6
+[bf]	DUP5	
+[c0]	DUP3	
+[c1]	DUP6	
+[c2]	ADD	
+[c3]	PUSH1	97
+[c5]	JUMP	
+[c6]	JUMPDEST	
+[c7]	SWAP2	
+[c8]	POP	
+[c9]	POP	
+[ca]	SWAP3	
+[cb]	SWAP2	
+[cc]	POP	
+[cd]	POP	
+[ce]	JUMP	
+[cf]	JUMPDEST	
+[d0]	PUSH1	d6
+[d2]	DUP2	
+[d3]	PUSH1	7b
+[d5]	JUMP	
+[d6]	JUMPDEST	
+[d7]	DUP3	
+[d8]	MSTORE	
+[d9]	POP	
+[da]	POP	
+[db]	JUMP	
+[dc]	JUMPDEST	
+[dd]	PUSH0	
+[de]	PUSH1	20
+[e0]	DUP3	
+[e1]	ADD	
+[e2]	SWAP1	
+[e3]	POP	
+[e4]	PUSH1	ed
+[e6]	PUSH0	
+[e7]	DUP4	
+[e8]	ADD	
+[e9]	DUP5	
+[ea]	PUSH1	cf
+[ec]	JUMP	
+[ed]	JUMPDEST	
+[ee]	SWAP3	
+[ef]	SWAP2	
+[f0]	POP	
+[f1]	POP	
+[f2]	JUMP	
+[f3]	INVALID	
+[f4]	LOG2	
+[f5]	PUSH5	6970667358
+[fb]	INVALID	
+[fc]	SLT	
+[fd]	KECCAK256	
+[fe]	BASEFEE	
+[ff]	MUL	
+[100]	INVALID	
+[101]	MUL	
+[102]	DIV	
+[103]	INVALID	
+[104]	SHR	
+[105]	INVALID	
+[106]	BLOBBASEFEE	
+[107]	SLT	
+[108]	INVALID	
+[109]	DUP2	
+[10a]	MCOPY	
+[10b]	TSTORE	
+[10c]	PUSH17	2d124be6b9ab15c1a46c725e3c09551da3
+[11e]	PUSH5	736f6c6343
+[124]	STOP	
+[125]	ADDMOD	
+[126]	INVALID	
+[127]	STOP	
+[128]	CALLER
