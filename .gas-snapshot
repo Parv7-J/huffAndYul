@@ -1,0 +1,14 @@
+HorseStoreHuffV2:testFeedingHorseUpdatesTimestamps() (gas: 108069)
+HorseStoreHuffV2:testFeedingMakesHappyHorse() (gas: 109436)
+HorseStoreHuffV2:testHorseIsHappyIfFedWithinPast24Hours(uint256,uint256) (runs: 256, μ: 40758, ~: 40815)
+HorseStoreHuffV2:testMintingHorseAssignsOwner(address) (runs: 256, μ: 86072, ~: 86072)
+HorseStoreHuffV2:testName() (gas: 10199)
+HorseStoreHuffV2:testNotFeedingMakesUnhappyHorse() (gas: 88502)
+
+
+HorseStoreSolidityV2:testFeedingHorseUpdatesTimestamps() (gas: 120883)
+HorseStoreSolidityV2:testFeedingMakesHappyHorse() (gas: 122895)
+HorseStoreSolidityV2:testHorseIsHappyIfFedWithinPast24Hours(uint256,uint256) (runs: 256, μ: 42335, ~: 42399)
+HorseStoreSolidityV2:testMintingHorseAssignsOwner(address) (runs: 256, μ: 95871, ~: 95881)
+HorseStoreSolidityV2:testName() (gas: 13340)
+HorseStoreSolidityV2:testNotFeedingMakesUnhappyHorse() (gas: 101559)
